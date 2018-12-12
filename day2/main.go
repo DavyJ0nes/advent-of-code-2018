@@ -3,10 +3,17 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"runtime/pprof"
 	"strings"
 )
 
 func main() {
+	f, err := os.Create("./mem-profile")
+	defer f.Close()
+
+	fmt.Println("starting...")
+	pprof.WriteHeapProfile(os.Stdout)
 	input, err := getInput("./input.txt")
 	if err != nil {
 		panic(err)
@@ -14,6 +21,8 @@ func main() {
 
 	output := GenerateChecksum(input)
 	fmt.Println(output)
+	fmt.Println("stopping...")
+	pprof.WriteHeapProfile(f)
 
 }
 
